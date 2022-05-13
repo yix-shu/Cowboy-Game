@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public enum BattleStates { START, TURN, LOST, WON}
+public class BattleSystem : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
