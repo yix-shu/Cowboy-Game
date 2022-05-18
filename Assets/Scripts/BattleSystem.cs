@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum BattleState { START, TURN, LOST, WON}
 public class BattleSystem : MonoBehaviour
@@ -12,6 +13,9 @@ public class BattleSystem : MonoBehaviour
     public Transform playerBattleLoc;
     public Transform enemyBattleLoc;
 
+    Unit playerUnit;
+    Unit enemyUnit;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +25,12 @@ public class BattleSystem : MonoBehaviour
 
     void SetupBattle()
     {
-        Instantiate(playerPrefab, playerBattleLoc);
-        Instantiate(enemyPrefab, enemyBattleLoc);
+        GameObject playerGO = Instantiate(playerPrefab, playerBattleLoc);
+        playerUnit = playerGO.GetComponent<Unit>();
+
+        GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleLoc);
+        enemyUnit = enemyGO.GetComponent<Unit>();
+
+        enemyUnit.unitName
     }
 }
