@@ -7,6 +7,8 @@ public enum BattleState { START, TURN, LOST, WON}
 public class BattleSystem : MonoBehaviour
 {
     public BattleState state;
+    public Text dialogueText;
+
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
 
@@ -31,6 +33,6 @@ public class BattleSystem : MonoBehaviour
         GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleLoc);
         enemyUnit = enemyGO.GetComponent<Unit>();
 
-        enemyUnit.unitName
+        dialogueText.text = enemyUnit.unitName + "has challenged you";
     }
 }
