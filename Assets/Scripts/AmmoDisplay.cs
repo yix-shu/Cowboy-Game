@@ -22,6 +22,16 @@ public class AmmoDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        for (int i = 0; i < bullets.Length; i++)
+        {
+            if (i < ammoLeft)
+            {
+                bullets[i].sprite = fullBullet;
+            }
+            else
+            {
+                bullets[i].sprite = emptyBullet;
+            }
+        }
     }
 }
