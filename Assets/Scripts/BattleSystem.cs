@@ -33,6 +33,6 @@ public class BattleSystem : MonoBehaviour
         GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleLoc);
         enemyUnit = enemyGO.GetComponent<Unit>();
 
-        dialogueText.text = enemyUnit.unitName + "has challenged you";
+        dialogueText.text = enemyUnit.unitName + "has challenged you"; //comment
     }
 }
