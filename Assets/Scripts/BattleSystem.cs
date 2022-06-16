@@ -28,7 +28,7 @@ public class BattleSystem : MonoBehaviour
         SetupBattle();
     }
 
-    void SetupBattle()
+    IEnumerator SetupBattle()
     {
         GameObject playerGO = Instantiate(playerPrefab, playerBattleLoc);
         playerUnit = playerGO.GetComponent<Unit>();
@@ -40,5 +40,15 @@ public class BattleSystem : MonoBehaviour
 
         playerHUD.SetHUD(playerUnit);
         enemyHUD.SetHUD(enemyUnit);
+
+        yield return new WaitForSeconds(3f); //a bit of break before the round begins
+
+        state = BattleState.TURN;
+        SimultaneousTurn();
+    }
+    void SimultaneousTurn()
+    {
+        dialogueText.text = "Choose a move:"; //can change this to "CHOOSE" later
+
     }
 }
