@@ -25,7 +25,7 @@ public class BattleSystem : MonoBehaviour
     void Start()
     {
         state = BattleState.START;
-        SetupBattle();
+        StartCoroutine(SetupBattle());
     }
 
     IEnumerator SetupBattle()
@@ -36,7 +36,7 @@ public class BattleSystem : MonoBehaviour
         GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleLoc);
         enemyUnit = enemyGO.GetComponent<Unit>();
 
-        dialogueText.text = enemyUnit.unitName + "has challenged you";
+        dialogueText.text = enemyUnit.unitName + " has challenged you";
 
         playerHUD.SetHUD(playerUnit);
         enemyHUD.SetHUD(enemyUnit);
@@ -49,6 +49,10 @@ public class BattleSystem : MonoBehaviour
     void SimultaneousTurn()
     {
         dialogueText.text = "Choose a move:"; //can change this to "CHOOSE" later
+
+    }
+    void OnAttackButton()
+    {
 
     }
 }
