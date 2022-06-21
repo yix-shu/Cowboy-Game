@@ -46,13 +46,26 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.TURN;
         SimultaneousTurn();
     }
+    IEnumerator PlayerShoot()
+    {
+        yield return new WaitForSeconds(3f);
+
+        //Check if the enemy has died
+
+        //Change state based on what has occurred
+
+    }
     void SimultaneousTurn()
     {
         dialogueText.text = "Choose a move:"; //can change this to "CHOOSE" later
 
     }
-    void OnAttackButton()
+    public void OnShootButton()
     {
-
+        if (state != BattleState.TURN) 
+        {
+            return;
+        }
+        StartCoroutine(PlayerShoot());
     }
 }
