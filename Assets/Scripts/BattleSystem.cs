@@ -48,11 +48,23 @@ public class BattleSystem : MonoBehaviour
     }
     IEnumerator PlayerShoot()
     {
-        enemyUnit.TakeDamage(1);
+        //check if enemy reloaded during this turn
+
+        bool isDead = enemyUnit.TakeDamage(1);
+
+        enemyHUD.updateHP(enemyUnit.currentHP);
 
         yield return new WaitForSeconds(3f);
 
         //Check if the enemy has died
+        if (isDead)
+        {
+            //End battle
+        }
+        else
+        {
+            //New turn 
+        }
 
         //Change state based on what has occurred
 
