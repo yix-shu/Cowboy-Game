@@ -17,10 +17,12 @@ public class BattleSystem : MonoBehaviour
     public Transform enemyBattleLoc;
 
     Unit playerUnit;
-    Unit enemyUnit;
+    Level1NPC enemyUnit;
 
     public BattleHUD playerHUD;
     public BattleHUD enemyHUD;
+
+    private string choice;
 
     // Start is called before the first frame update
     void Start()
@@ -35,7 +37,7 @@ public class BattleSystem : MonoBehaviour
         playerUnit = playerGO.GetComponent<Unit>();
 
         GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleLoc);
-        enemyUnit = enemyGO.GetComponent<Unit>();
+        enemyUnit = enemyGO.GetComponent<Level1NPC>();
 
         dialogueText.text = enemyUnit.unitName + " has challenged you";
 
@@ -53,15 +55,14 @@ public class BattleSystem : MonoBehaviour
         dialogueText.text = playerUnit.unitName + " shoots " + enemyUnit.unitName;
 
         //check if enemy reloaded during this turn
-
-        bool isDead = enemyUnit.TakeDamage(1);
+        bool enemyIsDead = enemyUnit.TakeDamage(1);
 
         enemyHUD.updateHP(enemyUnit.currentHP);
 
         yield return new WaitForSeconds(3f);
 
         //Check if the enemy has died
-        if (isDead)
+        if (enemyIsDead)
         {
             //End battle
             state = BattleState.WON;
@@ -81,10 +82,14 @@ public class BattleSystem : MonoBehaviour
     }
     IEnumerator PlayerReload()
     {
-        dialogueText.text = playerUnit.unitName + " shoots " + enemyUnit.unitName;
-        ammoDisplay.updateBullets();
+        dialogueText.text = playerUnit.unitName + " reloads.";
+        //ammoDisplay.updateBullets();
         //check if enemy shot during this turn
+        playerUnit.Reload();
+        yield return new WaitForSeconds(3f);
 
+        state = BattleState.TURN;
+        SimultaneousTurn();
     }
     void EndBattle()
     {
@@ -99,14 +104,31 @@ public class BattleSystem : MonoBehaviour
     void SimultaneousTurn()
     {
         dialogueText.text = "Choose a move:"; //can change this to "CHOOSE" later
-
+        choice = enemyUnit.enemyChoose(); //our automated NPC choice chooser
+        print(choice);
     }
     public void OnShootButton()
     {
         if (state != BattleState.TURN) 
         {
             return;
+        } else if (playerUnit.reloaded == false)
+        {
+            dialogueText.text = "Reload gun before shooting.";
+            return;
         }
         StartCoroutine(PlayerShoot());
+    }
+    public void OnReloadButton()
+    {
+        if (state != BattleState.TURN)
+        {
+            return;
+        }
+        StartCoroutine(PlayerReload());
+    }
+    public void onHoldButton()
+    {
+
     }
 }

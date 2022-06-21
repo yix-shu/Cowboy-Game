@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class Level1NPC : Unit
 {
-    string[] choices = { "Shoot", "Reload", "Hold" };
-    bool reloaded = false;
+    string[] choices = { "Shoot", "Hold", "Reload"};
 
-    public void onTurn()
+    public string enemyChoose()
     {
+        int index = 2;
         if (reloaded)
         {
-            int index = Random.Range(choices.Length);
+            index = Random.Range(0, 2);
         }
         else
         {
-            int index = Random.Range(1, choices.Length);
+            index = Random.Range(1, 3);
         }
+        reloaded = (choices[index] == "Reload");
+        return choices[index];
     }
 }
