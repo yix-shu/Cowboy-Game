@@ -48,6 +48,8 @@ public class BattleSystem : MonoBehaviour
     }
     IEnumerator PlayerShoot()
     {
+        enemyUnit.TakeDamage(1);
+
         yield return new WaitForSeconds(3f);
 
         //Check if the enemy has died
