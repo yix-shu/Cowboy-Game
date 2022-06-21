@@ -8,6 +8,7 @@ public class BattleSystem : MonoBehaviour
 {
     public BattleState state;
     public Text dialogueText;
+    public AmmoDisplay ammoDisplay;
 
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
@@ -48,6 +49,9 @@ public class BattleSystem : MonoBehaviour
     }
     IEnumerator PlayerShoot()
     {
+        playerUnit.reloaded = false;
+        dialogueText.text = playerUnit.unitName + " shoots " + enemyUnit.unitName;
+
         //check if enemy reloaded during this turn
 
         bool isDead = enemyUnit.TakeDamage(1);
@@ -60,14 +64,37 @@ public class BattleSystem : MonoBehaviour
         if (isDead)
         {
             //End battle
+            state = BattleState.WON;
+            EndBattle();
         }
         else
         {
             //New turn 
+            yield return new WaitForSeconds(3f);
+
+            state = BattleState.TURN;
+            SimultaneousTurn();
         }
 
         //Change state based on what has occurred
 
+    }
+    IEnumerator PlayerReload()
+    {
+        dialogueText.text = playerUnit.unitName + " shoots " + enemyUnit.unitName;
+        ammoDisplay.updateBullets();
+        //check if enemy shot during this turn
+
+    }
+    void EndBattle()
+    {
+        if (state == BattleState.WON)
+        {
+            dialogueText.text = "You won the duel!";
+        } else if (state == BattleState.LOST)
+        {
+            dialogueText.text = "You have lost the duel.";
+        }
     }
     void SimultaneousTurn()
     {

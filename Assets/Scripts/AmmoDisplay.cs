@@ -34,4 +34,8 @@ public class AmmoDisplay : MonoBehaviour
             }
         }
     }
+    public void updateBullets()
+    {
+        ammoLeft -= 1;
+    }
 }
