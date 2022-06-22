@@ -126,6 +126,10 @@ public class BattleSystem : MonoBehaviour
         dialogueText.text = "Choose a move:"; //can change this to "CHOOSE" later
         choice = enemyUnit.enemyChoose(); //our automated NPC choice chooser
         print(choice);
+        if (choice == "Reload")
+        {
+            enemyHUD.updateBullets();
+        }
     }
 
     //----------HANDLES BUTTON EVENTS
