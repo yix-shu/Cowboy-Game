@@ -91,6 +91,24 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.TURN;
         SimultaneousTurn();
     }
+    IEnumerator PlayerHold()
+    {
+        if (choice == "Reload")
+        {
+            dialogueText.text = playerUnit.unitName + " held while " + enemyUnit.unitName + " reloaded.";
+        } else if (choice == "Shoot"){
+            dialogueText.text = playerUnit.unitName + " held and ended up blocking " + enemyUnit.unitName + "'s shot!";
+        } else
+        {
+            dialogueText.text = "Everyone passed/held.";
+        }
+        
+        //check if enemy shot during this turn
+        yield return new WaitForSeconds(3f);
+
+        state = BattleState.TURN;
+        SimultaneousTurn();
+    }
     void EndBattle()
     {
         if (state == BattleState.WON)
@@ -129,6 +147,10 @@ public class BattleSystem : MonoBehaviour
     }
     public void onHoldButton()
     {
-
+        if (state != BattleState.TURN)
+        {
+            return;
+        }
+        StartCoroutine(PlayerHold());
     }
 }
