@@ -8,7 +8,6 @@ public class BattleSystem : MonoBehaviour
 {
     public BattleState state;
     public Text dialogueText;
-    public AmmoDisplay ammoDisplay;
 
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
@@ -59,7 +58,7 @@ public class BattleSystem : MonoBehaviour
         //check if enemy reloaded during this turn
         bool enemyIsDead = enemyUnit.TakeDamage(1);
 
-        enemyHUD.updateHP(enemyUnit.currentHP);
+        //enemyHUD.updateHP(enemyUnit.currentHP);
 
         yield return new WaitForSeconds(3f);
 
@@ -85,7 +84,7 @@ public class BattleSystem : MonoBehaviour
     IEnumerator PlayerReload()
     {
         dialogueText.text = playerUnit.unitName + " reloads.";
-        //ammoDisplay.updateBullets();
+        playerHUD.updateBullets();
         //check if enemy shot during this turn
         playerUnit.Reload();
         yield return new WaitForSeconds(3f);
