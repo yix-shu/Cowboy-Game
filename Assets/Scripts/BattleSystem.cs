@@ -49,6 +49,8 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.TURN;
         SimultaneousTurn();
     }
+
+    //----------HANDLES PLAYER ACTIONS
     IEnumerator PlayerShoot()
     {
         playerUnit.reloaded = false;
@@ -102,13 +104,14 @@ public class BattleSystem : MonoBehaviour
         {
             dialogueText.text = "Everyone passed/held.";
         }
-        
         //check if enemy shot during this turn
         yield return new WaitForSeconds(3f);
 
         state = BattleState.TURN;
         SimultaneousTurn();
     }
+
+    //----------HANDLES STATES
     void EndBattle()
     {
         if (state == BattleState.WON)
@@ -125,6 +128,8 @@ public class BattleSystem : MonoBehaviour
         choice = enemyUnit.enemyChoose(); //our automated NPC choice chooser
         print(choice);
     }
+
+    //----------HANDLES BUTTON EVENTS
     public void OnShootButton()
     {
         if (state != BattleState.TURN) 
@@ -145,7 +150,7 @@ public class BattleSystem : MonoBehaviour
         }
         StartCoroutine(PlayerReload());
     }
-    public void onHoldButton()
+    public void OnHoldButton()
     {
         if (state != BattleState.TURN)
         {
