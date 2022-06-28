@@ -83,6 +83,37 @@ public class BattleSystem : MonoBehaviour
     }
     IEnumerator PlayerReload()
     {
+        if (choice == "Reload")
+        {
+            dialogueText.text = playerUnit.unitName + " held while " + enemyUnit.unitName + " reloaded.";
+            enemyHUD.updateBullets();
+        }
+        else if (choice == "Shoot")
+        {
+            dialogueText.text = playerUnit.unitName + " reloaded while " + enemyUnit.unitName + " shot them!";
+            bool playerIsDead = playerUnit.TakeDamage(1);
+            yield return new WaitForSeconds(3f);
+
+            //Check if the enemy has died
+            if (playerIsDead)
+            {
+                //End battle
+                state = BattleState.LOST;
+                EndBattle();
+            }
+            else
+            {
+                //New turn 
+                yield return new WaitForSeconds(3f);
+
+                state = BattleState.TURN;
+                SimultaneousTurn();
+            }
+        }
+        else
+        {
+            dialogueText.text = "Everyone passed/held.";
+        }
         dialogueText.text = playerUnit.unitName + " reloads.";
         playerHUD.updateBullets();
         //check if enemy shot during this turn
@@ -97,6 +128,7 @@ public class BattleSystem : MonoBehaviour
         if (choice == "Reload")
         {
             dialogueText.text = playerUnit.unitName + " held while " + enemyUnit.unitName + " reloaded.";
+            enemyHUD.updateBullets();
         } else if (choice == "Shoot"){
             dialogueText.text = playerUnit.unitName + " held and ended up blocking " + enemyUnit.unitName + "'s shot!";
         } else
@@ -126,10 +158,10 @@ public class BattleSystem : MonoBehaviour
         dialogueText.text = "Choose a move:"; //can change this to "CHOOSE" later
         choice = enemyUnit.enemyChoose(); //our automated NPC choice chooser
         print(choice);
-        if (choice == "Reload")
+        /*if (choice == "Reload")
         {
             enemyHUD.updateBullets();
-        }
+        }*/
     }
 
     //----------HANDLES BUTTON EVENTS
