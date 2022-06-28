@@ -52,33 +52,78 @@ public class BattleSystem : MonoBehaviour
     //----------HANDLES PLAYER ACTIONS
     IEnumerator PlayerShoot()
     {
-        playerUnit.reloaded = false;
-        dialogueText.text = playerUnit.unitName + " shoots " + enemyUnit.unitName;
-
-        //check if enemy reloaded during this turn
-        bool enemyIsDead = enemyUnit.TakeDamage(1);
-
-        //enemyHUD.updateHP(enemyUnit.currentHP);
-
-        yield return new WaitForSeconds(3f);
-
-        //Check if the enemy has died
-        if (enemyIsDead)
+        if (playerUnit.reloaded)
         {
-            //End battle
-            state = BattleState.WON;
-            EndBattle();
+            playerUnit.reloaded = false;
+            if (choice == "Reload")
+            {
+                dialogueText.text = playerUnit.unitName + " reloaded while " + enemyUnit.unitName + " shot them!";
+                enemyHUD.updateBullets();
+                //check if enemy reloaded during this turn
+                bool enemyIsDead = enemyUnit.TakeDamage(1);
+
+                //enemyHUD.updateHP(enemyUnit.currentHP);
+
+                yield return new WaitForSeconds(3f);
+
+                //Check if the enemy has died
+                if (enemyIsDead)
+                {
+                    //End battle
+                    state = BattleState.WON;
+                    EndBattle();
+                }
+                else
+                {
+                    //New turn 
+                    yield return new WaitForSeconds(3f);
+
+                    state = BattleState.TURN;
+                    SimultaneousTurn();
+                }
+            }
+            else if (choice == "Shoot")
+            {
+                dialogueText.text = "Everyone was shot and received injuries!";
+                //check if enemy reloaded during this turn
+                bool enemyIsDead = enemyUnit.TakeDamage(1);
+
+                //enemyHUD.updateHP(enemyUnit.currentHP);
+
+                yield return new WaitForSeconds(3f);
+
+                //Check if the enemy has died
+                if (enemyIsDead)
+                {
+                    //End battle
+                    state = BattleState.WON;
+                    EndBattle();
+                }
+                else
+                {
+                    //New turn 
+                    yield return new WaitForSeconds(3f);
+
+                    state = BattleState.TURN;
+                    SimultaneousTurn();
+                }
+            }
+            else
+            {
+                dialogueText.text = playerUnit.unitName + " shot but " + enemyUnit.unitName + " held and ended up blocking it!";
+            }
+            //dialogueText.text = playerUnit.unitName + " reloads.";
+            playerHUD.updateBullets();
+            //check if enemy shot during this turn
+            playerUnit.Reload();
         }
         else
         {
-            //New turn 
+            dialogueText.text = "You cannot shoot without reloading" + ". As a result, " + playerUnit.unitName + " held.";
             yield return new WaitForSeconds(3f);
-
-            state = BattleState.TURN;
-            SimultaneousTurn();
+            StartCoroutine(PlayerHold());
         }
-
-        //Change state based on what has occurred
+        
 
     }
     IEnumerator PlayerReload()
@@ -89,40 +134,43 @@ public class BattleSystem : MonoBehaviour
             yield return new WaitForSeconds(3f);
             StartCoroutine(PlayerHold());
         }
-        if (choice == "Reload")
+        else
         {
-            dialogueText.text = "Everyone reloaded.";
-            enemyHUD.updateBullets();
-        }
-        else if (choice == "Shoot")
-        {
-            dialogueText.text = playerUnit.unitName + " reloaded while " + enemyUnit.unitName + " shot them!";
-            bool playerIsDead = playerUnit.TakeDamage(1);
-            yield return new WaitForSeconds(3f);
-
-            //Check if the enemy has died
-            if (playerIsDead)
+            if (choice == "Reload")
             {
-                //End battle
-                state = BattleState.LOST;
-                EndBattle();
+                dialogueText.text = "Everyone reloaded.";
+                enemyHUD.updateBullets();
+            }
+            else if (choice == "Shoot")
+            {
+                dialogueText.text = playerUnit.unitName + " reloaded while " + enemyUnit.unitName + " shot them!";
+                bool playerIsDead = playerUnit.TakeDamage(1);
+                yield return new WaitForSeconds(3f);
+
+                //Check if the enemy has died
+                if (playerIsDead)
+                {
+                    //End battle
+                    state = BattleState.LOST;
+                    EndBattle();
+                }
+                else
+                {
+                    //New turn 
+                    yield return new WaitForSeconds(3f);
+                    state = BattleState.TURN;
+                    SimultaneousTurn();
+                }
             }
             else
             {
-                //New turn 
-                yield return new WaitForSeconds(3f);
-                state = BattleState.TURN;
-                SimultaneousTurn();
+                dialogueText.text = playerUnit.unitName + " reloaded while " + enemyUnit.unitName + " held.";
             }
+            //dialogueText.text = playerUnit.unitName + " reloads.";
+            playerHUD.updateBullets();
+            //check if enemy shot during this turn
+            playerUnit.Reload();
         }
-        else
-        {
-            dialogueText.text = playerUnit.unitName + " reloaded while " + enemyUnit.unitName + " held.";
-        }
-        //dialogueText.text = playerUnit.unitName + " reloads.";
-        playerHUD.updateBullets();
-        //check if enemy shot during this turn
-        playerUnit.Reload();
         yield return new WaitForSeconds(3f);
 
         state = BattleState.TURN;
