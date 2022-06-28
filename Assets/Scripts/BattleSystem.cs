@@ -83,6 +83,12 @@ public class BattleSystem : MonoBehaviour
     }
     IEnumerator PlayerReload()
     {
+        if (playerUnit.reloaded)
+        {
+            dialogueText.text = "You cannot reload more than once. As a result, " + playerUnit.unitName + " held.";
+            yield return new WaitForSeconds(3f);
+            StartCoroutine(PlayerHold());
+        }
         if (choice == "Reload")
         {
             dialogueText.text = "Everyone reloaded.";
