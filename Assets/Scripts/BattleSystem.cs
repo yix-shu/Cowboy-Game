@@ -3,7 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum BattleState { START, TURN, LOST, WON}
+public enum BattleState { START, TURN, LOST, WON, TIE}
+
+/*
+ TODO:
+- will want to fix the health updates so that it updates with the Shoot, Reload, Hold events and not after them because the HUD looks weird then.
+- make sure to check when the ammo is used up
+ */
 public class BattleSystem : MonoBehaviour
 {
     public BattleState state;
@@ -59,6 +65,7 @@ public class BattleSystem : MonoBehaviour
             {
                 dialogueText.text = playerUnit.unitName + " reloaded while " + enemyUnit.unitName + " shot them!";
                 enemyHUD.updateBullets();
+                enemyUnit.reloaded = true;
                 //check if enemy reloaded during this turn
                 bool enemyIsDead = enemyUnit.TakeDamage(1);
 
@@ -76,8 +83,6 @@ public class BattleSystem : MonoBehaviour
                 else
                 {
                     //New turn 
-                    yield return new WaitForSeconds(3f);
-
                     state = BattleState.TURN;
                     SimultaneousTurn();
                 }
@@ -85,7 +90,7 @@ public class BattleSystem : MonoBehaviour
             else if (choice == "Shoot")
             {
                 dialogueText.text = "Everyone was shot and received injuries!";
-                //check if enemy reloaded during this turn
+                bool playerIsDead = playerUnit.TakeDamage(1);
                 bool enemyIsDead = enemyUnit.TakeDamage(1);
 
                 //enemyHUD.updateHP(enemyUnit.currentHP);
@@ -93,17 +98,23 @@ public class BattleSystem : MonoBehaviour
                 yield return new WaitForSeconds(3f);
 
                 //Check if the enemy has died
-                if (enemyIsDead)
+                if (enemyIsDead && playerIsDead)
                 {
+                    state = BattleState.TIE;
+                    EndBattle();
+                } else if (enemyIsDead) { 
                     //End battle
                     state = BattleState.WON;
+                    EndBattle();
+                } else if (playerIsDead)
+                {
+                    //End battle
+                    state = BattleState.LOST;
                     EndBattle();
                 }
                 else
                 {
                     //New turn 
-                    yield return new WaitForSeconds(3f);
-
                     state = BattleState.TURN;
                     SimultaneousTurn();
                 }
@@ -112,10 +123,6 @@ public class BattleSystem : MonoBehaviour
             {
                 dialogueText.text = playerUnit.unitName + " shot but " + enemyUnit.unitName + " held and ended up blocking it!";
             }
-            //dialogueText.text = playerUnit.unitName + " reloads.";
-            playerHUD.updateBullets();
-            //check if enemy shot during this turn
-            playerUnit.Reload();
         }
         else
         {
@@ -139,6 +146,7 @@ public class BattleSystem : MonoBehaviour
             if (choice == "Reload")
             {
                 dialogueText.text = "Everyone reloaded.";
+                enemyUnit.reloaded = true;
                 enemyHUD.updateBullets();
             }
             else if (choice == "Shoot")
@@ -157,7 +165,6 @@ public class BattleSystem : MonoBehaviour
                 else
                 {
                     //New turn 
-                    yield return new WaitForSeconds(3f);
                     state = BattleState.TURN;
                     SimultaneousTurn();
                 }
@@ -204,10 +211,15 @@ public class BattleSystem : MonoBehaviour
         } else if (state == BattleState.LOST)
         {
             dialogueText.text = "You have lost the duel.";
+        } else if (state == BattleState.TIE)
+        {
+            dialogueText.text = "The duel was inconclusive.";
         }
     }
     void SimultaneousTurn()
     {
+        enemyHUD.updateHP(enemyUnit.currentHP);
+        playerHUD.updateHP(playerUnit.currentHP);
         dialogueText.text = "Choose a move:"; //can change this to "CHOOSE" later
         choice = enemyUnit.enemyChoose(); //our automated NPC choice chooser
         print(choice);
