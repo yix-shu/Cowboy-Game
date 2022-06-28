@@ -85,7 +85,7 @@ public class BattleSystem : MonoBehaviour
     {
         if (choice == "Reload")
         {
-            dialogueText.text = playerUnit.unitName + " held while " + enemyUnit.unitName + " reloaded.";
+            dialogueText.text = "Everyone reloaded.";
             enemyHUD.updateBullets();
         }
         else if (choice == "Shoot")
@@ -105,16 +105,15 @@ public class BattleSystem : MonoBehaviour
             {
                 //New turn 
                 yield return new WaitForSeconds(3f);
-
                 state = BattleState.TURN;
                 SimultaneousTurn();
             }
         }
         else
         {
-            dialogueText.text = "Everyone passed/held.";
+            dialogueText.text = playerUnit.unitName + " reloaded while " + enemyUnit.unitName + " held.";
         }
-        dialogueText.text = playerUnit.unitName + " reloads.";
+        //dialogueText.text = playerUnit.unitName + " reloads.";
         playerHUD.updateBullets();
         //check if enemy shot during this turn
         playerUnit.Reload();
