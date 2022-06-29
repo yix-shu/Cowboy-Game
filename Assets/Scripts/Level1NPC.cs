@@ -17,7 +17,7 @@ public class Level1NPC : Unit
         {
             index = Random.Range(1, 3);
         }
-        reloaded = (choices[index] == "Reload");
+        //reloaded = (choices[index] == "Reload");
         return choices[index];
     }
 }

@@ -54,6 +54,12 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.TURN;
         SimultaneousTurn();
     }
+    //----------HANDLES HUD CHANGES
+    public void updateHPHUD()
+    {
+        enemyHUD.updateHP(enemyUnit.currentHP);
+        playerHUD.updateHP(playerUnit.currentHP);
+    }
 
     //----------HANDLES PLAYER ACTIONS
     IEnumerator PlayerShoot()
@@ -63,12 +69,12 @@ public class BattleSystem : MonoBehaviour
             playerUnit.reloaded = false;
             if (choice == "Reload")
             {
-                dialogueText.text = playerUnit.unitName + " reloaded while " + enemyUnit.unitName + " shot them!";
+                dialogueText.text = playerUnit.unitName + " shot " + enemyUnit.unitName + " while they were reloading!";
                 enemyHUD.updateBullets();
                 enemyUnit.reloaded = true;
                 //check if enemy reloaded during this turn
                 bool enemyIsDead = enemyUnit.TakeDamage(1);
-
+                updateHPHUD();
                 //enemyHUD.updateHP(enemyUnit.currentHP);
 
                 yield return new WaitForSeconds(3f);
@@ -90,8 +96,10 @@ public class BattleSystem : MonoBehaviour
             else if (choice == "Shoot")
             {
                 dialogueText.text = "Everyone was shot and received injuries!";
+                enemyUnit.reloaded = false;
                 bool playerIsDead = playerUnit.TakeDamage(1);
                 bool enemyIsDead = enemyUnit.TakeDamage(1);
+                updateHPHUD();
 
                 //enemyHUD.updateHP(enemyUnit.currentHP);
 
@@ -152,7 +160,9 @@ public class BattleSystem : MonoBehaviour
             else if (choice == "Shoot")
             {
                 dialogueText.text = playerUnit.unitName + " reloaded while " + enemyUnit.unitName + " shot them!";
+                enemyUnit.reloaded = false;
                 bool playerIsDead = playerUnit.TakeDamage(1);
+                updateHPHUD();
                 yield return new WaitForSeconds(3f);
 
                 //Check if the enemy has died
@@ -188,9 +198,11 @@ public class BattleSystem : MonoBehaviour
         if (choice == "Reload")
         {
             dialogueText.text = playerUnit.unitName + " held while " + enemyUnit.unitName + " reloaded.";
+            enemyUnit.reloaded = true;
             enemyHUD.updateBullets();
         } else if (choice == "Shoot"){
             dialogueText.text = playerUnit.unitName + " held and ended up blocking " + enemyUnit.unitName + "'s shot!";
+            enemyUnit.reloaded = false;
         } else
         {
             dialogueText.text = "Everyone passed/held.";
@@ -218,8 +230,6 @@ public class BattleSystem : MonoBehaviour
     }
     void SimultaneousTurn()
     {
-        enemyHUD.updateHP(enemyUnit.currentHP);
-        playerHUD.updateHP(playerUnit.currentHP);
         dialogueText.text = "Choose a move:"; //can change this to "CHOOSE" later
         choice = enemyUnit.enemyChoose(); //our automated NPC choice chooser
         print(choice);
