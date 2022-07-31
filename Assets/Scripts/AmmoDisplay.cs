@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class AmmoDisplay : MonoBehaviour
 {
     public int ammoLeft = 10;
-
     public Image[] bullets;
     public Sprite fullBullet;
     public Sprite emptyBullet;
