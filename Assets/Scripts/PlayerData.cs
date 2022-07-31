@@ -9,7 +9,8 @@ public class PlayerData : MonoBehaviour
     public int money;
 
     public PlayerData(Player player)
+    {
         level = player.level;
         money = player.money;
-
+    }
 }
