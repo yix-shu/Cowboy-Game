@@ -10,7 +10,7 @@ public class PlayerData : MonoBehaviour
 
     public PlayerData(Player player)
     {
-        level = player.level;
+        exp = player.exp;
         money = player.money;
     }
 }
