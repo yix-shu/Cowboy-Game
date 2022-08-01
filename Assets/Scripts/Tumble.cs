@@ -42,7 +42,7 @@ namespace Assets.Scripts
                 Object.Destroy(this.gameObject);
             }
             rotateSpeed = Random.Range(-0.4f, -0.2f);
-            speed += 2.0f;
+            speed -= 5.0f;
         }
         IEnumerator WaitAfterCloning()
         {
