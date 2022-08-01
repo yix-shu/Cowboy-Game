@@ -13,7 +13,7 @@ namespace Assets.Scripts
         private float speed = 20.0f;
 
         [SerializeField]
-        private Vector3 spawn = new Vector3(-97.2f, 1.0f, -4111.0f);
+        private Vector3 spawn = new Vector3(-170.0f, 1.0f, -4111.0f); //should change relative to screen
 
         private float rotateSpeed = -0.3f;
 
