@@ -21,14 +21,16 @@ namespace Assets.Scripts
         void Start()
         {
             rb = GetComponent<Rigidbody2D>();
+            StartCoroutine(WaitAfterCloning());
         }
 
-        // Update is called once per frame
-        void Update()
+        IEnumerator Continue()
         {
             rb.velocity = new Vector2(speed, rb.velocity.y);
             this.gameObject.transform.Rotate(0.0f, 0.0f, rotateSpeed);
-            speed = Random.Range(20, 50);
+            speed = Random.Range(20, 30);
+            yield return null;
+            StartCoroutine(Continue());
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -39,8 +41,14 @@ namespace Assets.Scripts
                 Instantiate(tumblePrefab, spawn, Quaternion.identity);
                 Object.Destroy(this.gameObject);
             }
-            rotateSpeed = Random.Range(-0.1f, -0.3f);
-            speed += 10.0f;
+            rotateSpeed = Random.Range(-0.4f, -0.2f);
+            speed += 2.0f;
+        }
+        IEnumerator WaitAfterCloning()
+        {
+            yield return new WaitForSeconds(Random.Range(5, 10));
+            this.gameObject.transform.position = spawn;
+            StartCoroutine(Continue());
         }
     }
 }
