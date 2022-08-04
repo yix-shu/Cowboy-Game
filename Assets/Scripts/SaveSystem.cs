@@ -16,6 +16,9 @@ namespace Assets.Scripts
 
             formatter.Serialize(stream, data);
             stream.Close();
+
+            Debug.Log("Saved!");
+            Debug.Log(path);
         }
 
         public static PlayerData LoadPlayer()
