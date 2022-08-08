@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
@@ -8,6 +9,7 @@ namespace Assets.Scripts
 
         public Canvas optionsCanvas;
         public Player player;
+        public Text saveMessage;
 
         // Use this for initialization
         void Start()
@@ -18,6 +20,7 @@ namespace Assets.Scripts
         public void clickedOptions()
         {
             UIController.opencloseCanvas(optionsCanvas);
+            UIController.displayText(saveMessage, ""); //clearing messages, might want to create new method for this
         }
 
         public void clickedMenu()
@@ -28,6 +31,7 @@ namespace Assets.Scripts
         public void saveGame()
         {
             SaveSystem.SavePlayer(player);
+            UIController.displayText(saveMessage, "Saved!");
         }
     }
 }

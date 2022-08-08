@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
@@ -20,6 +21,10 @@ namespace Assets.Scripts
         public static void switchScene(int forwardOrBackward)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + forwardOrBackward);
+        }
+        public static void displayText(Text textLabel, string message)
+        {
+            textLabel.text = message;
         }
     }
 }
