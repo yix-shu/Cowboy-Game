@@ -17,8 +17,8 @@ namespace Assets.Scripts
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             PlayerData data = SaveSystem.LoadPlayer();
 
-            GameMaster.player.money = data.money;
-            GameMaster.player.exp = data.exp;
+            GameMaster.instance.player.money = data.money;
+            GameMaster.instance.player.exp = data.exp;
         }
     }
 }
