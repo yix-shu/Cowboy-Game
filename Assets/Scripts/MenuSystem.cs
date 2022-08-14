@@ -11,6 +11,8 @@ namespace Assets.Scripts
         public void Play()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            GameMaster.instance.player.money = 0;
+            GameMaster.instance.player.exp = 0;
         }
         public void Continue()
         {
