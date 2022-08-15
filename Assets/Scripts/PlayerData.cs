@@ -7,10 +7,12 @@ public class PlayerData
 {
     public int exp;
     public int money;
+    public bool[] costumes;
 
     public PlayerData(Player player)
     {
         exp = player.exp;
         money = player.money;
+        costumes = player.costumes;
     }
 }

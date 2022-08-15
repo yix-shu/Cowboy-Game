@@ -6,5 +6,5 @@ public class Player : MonoBehaviour
 {
     public int exp;
     public int money;
-
+    public bool[] costumes;
 }

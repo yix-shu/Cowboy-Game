@@ -21,6 +21,7 @@ namespace Assets.Scripts
 
             GameMaster.instance.player.money = data.money;
             GameMaster.instance.player.exp = data.exp;
+            GameMaster.instance.player.costumes = data.costumes;
         }
     }
 }
