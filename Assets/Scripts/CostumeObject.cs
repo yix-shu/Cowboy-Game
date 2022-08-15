@@ -7,7 +7,7 @@ public abstract class CostumeObject : ItemObject
 {
 	public void Awake()
     {
-        typeof = ItemType.Costume;
+        type = ItemType.Costume;
     }
 }
 

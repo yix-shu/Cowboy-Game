@@ -7,7 +7,7 @@ public enum ItemType
 	Costume,
 	GunSkin
 }
-public abstract class ItemObject : ItemObject
+public abstract class ItemObject : ScriptableObject
 {
 	public GameObject prefab;
 	public ItemType type;
