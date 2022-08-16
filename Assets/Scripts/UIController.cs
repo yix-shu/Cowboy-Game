@@ -26,5 +26,9 @@ namespace Assets.Scripts
         {
             textLabel.text = message;
         }
+        public static void displayText(TextMesh textLabel, string message)
+        {
+            textLabel.text = message;
+        }
     }
 }
