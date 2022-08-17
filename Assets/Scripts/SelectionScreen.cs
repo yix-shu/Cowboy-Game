@@ -16,10 +16,13 @@ namespace Assets.Scripts
             UIController.displayText(playerLevel, player.exp.ToString());
         }
 
-        // Update is called once per frame
-        void Update()
+        public void Back()
         {
-
+            UIController.switchScene(-1);
+        }
+        public void DuelSelect()
+        {
+            UIController.switchScene(1);
         }
     }
 }
