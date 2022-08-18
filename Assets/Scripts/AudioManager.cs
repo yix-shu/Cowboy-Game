@@ -14,7 +14,6 @@ namespace Assets.Scripts
             if (instance == null)
             {
                 instance = this;
-                Debug.Log("Yes");
             }
             else
             {
@@ -34,7 +33,6 @@ namespace Assets.Scripts
         public void enableAudioSource(AudioSource source)
         {
             source.enabled = true;
-            Debug.Log("YAS");
         }
     }
 }

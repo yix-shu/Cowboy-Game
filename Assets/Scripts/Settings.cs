@@ -8,7 +8,6 @@ namespace Assets.Scripts
     {
 
         public Canvas optionsCanvas;
-        public Player player;
         public Text saveMessage;
 
         // Use this for initialization

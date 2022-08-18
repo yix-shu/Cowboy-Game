@@ -6,19 +6,20 @@ namespace Assets.Scripts
 {
     public static class SaveSystem   
     {
-        public static void SavePlayer(Player player)
+        public static void SavePlayer(PlayerData data)
         {
             BinaryFormatter formatter = new BinaryFormatter();
             string path = Application.persistentDataPath + "/player.fun"; //Application.persistentDataPath uses the OS's system file path
             FileStream stream = new FileStream(path, FileMode.Create);
 
-            PlayerData data = new PlayerData(player);
+            //PlayerData data = new PlayerData(player);
 
             formatter.Serialize(stream, data);
             stream.Close();
 
             Debug.Log("Saved!");
             Debug.Log(path);
+            Debug.Log(GameMaster.instance.player.money);
         }
 
         public static PlayerData LoadPlayer()

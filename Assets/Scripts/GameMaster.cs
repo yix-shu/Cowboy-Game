@@ -6,21 +6,19 @@ namespace Assets.Scripts
     public class GameMaster : MonoBehaviour
     {
         public static GameMaster instance;
-        public Player player;
+        public PlayerData player;
         void Awake()
         {
             if (instance == null)
             {
                 instance = this;
+                instance.player.money = 0;
+                instance.player.exp = 0;
                 DontDestroyOnLoad(gameObject);
-                Debug.Log("RAWR");
-                Debug.Log(instance.player.exp);
             }
             else if (instance != this)
             {
                 Destroy(gameObject);
-                Debug.Log("meow");
-                Debug.Log(instance.player.exp);
             }
         }
 
