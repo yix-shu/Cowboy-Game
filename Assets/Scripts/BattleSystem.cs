@@ -227,6 +227,7 @@ namespace Assets.Scripts
 
         IEnumerator WaitBeforeMenu()
         {
+            SaveSystem.SavePlayer(GameMaster.instance.player);
             yield return new WaitForSeconds(3f);
             UIController.switchScene(-1);
 

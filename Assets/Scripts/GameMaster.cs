@@ -11,12 +11,16 @@ namespace Assets.Scripts
         {
             if (instance == null)
             {
-                DontDestroyOnLoad(gameObject);
                 instance = this;
+                DontDestroyOnLoad(gameObject);
+                Debug.Log("RAWR");
+                Debug.Log(instance.player.exp);
             }
             else if (instance != this)
             {
                 Destroy(gameObject);
+                Debug.Log("meow");
+                Debug.Log(instance.player.exp);
             }
         }
 

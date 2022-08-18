@@ -34,8 +34,8 @@ namespace Assets.Scripts
             //loading player data
             GameMaster.instance.player.money = data.money;
             GameMaster.instance.player.exp = data.exp;
-            GameMaster.instance.player.costumes = data.costumes;
-            GameMaster.instance.player.outfit = data.outfit;
+            //GameMaster.instance.player.costumes = data.costumes;
+            //GameMaster.instance.player.outfit = data.outfit;
         }
     }
 }
