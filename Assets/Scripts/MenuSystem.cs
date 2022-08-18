@@ -32,8 +32,6 @@ namespace Assets.Scripts
             PlayerData data = SaveSystem.LoadPlayer();
 
             //loading player data
-            Debug.Log(GameMaster.instance == null);
-            Debug.Log(GameMaster.instance.player == null);
             GameMaster.instance.player.money = data.money;
             GameMaster.instance.player.exp = data.exp;
             //GameMaster.instance.player.costumes = data.costumes;

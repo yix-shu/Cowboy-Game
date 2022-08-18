@@ -16,10 +16,6 @@ namespace Assets.Scripts
 
             formatter.Serialize(stream, data);
             stream.Close();
-
-            Debug.Log("Saved!");
-            Debug.Log(path);
-            Debug.Log(GameMaster.instance.player.money);
         }
 
         public static PlayerData LoadPlayer()
