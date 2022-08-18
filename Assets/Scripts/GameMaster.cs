@@ -23,9 +23,7 @@ namespace Assets.Scripts
         // Update is called once per frame
         void Update()
         {
-            player.exp = instance.player.exp;
-            player.money = instance.player.money;
-            Debug.Log(player.exp);
+            
         }
     }
 }
