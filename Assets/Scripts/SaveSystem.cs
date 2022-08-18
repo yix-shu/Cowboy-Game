@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary; //Binary Formatter for tra
 
 namespace Assets.Scripts
 {
-    public static class SaveSystem 
+    public static class SaveSystem   
     {
         public static void SavePlayer(Player player)
         {

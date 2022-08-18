@@ -30,7 +30,7 @@ namespace Assets.Scripts
 
         public void saveGame()
         {
-            SaveSystem.SavePlayer(player);
+            SaveSystem.SavePlayer(GameMaster.instance.player);
             UIController.displayText(saveMessage, "Saved!");
         }
     }
