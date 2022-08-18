@@ -10,7 +10,6 @@ namespace Assets.Scripts
 
         void Awake()
         {
-            Debug.Log("Hi");
             if (instance == null)
             {
                 instance = this;

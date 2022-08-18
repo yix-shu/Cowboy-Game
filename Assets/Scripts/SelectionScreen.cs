@@ -7,16 +7,15 @@ namespace Assets.Scripts
 {
     public class SelectionScreen : MonoBehaviour
     {
-        public Player player;
         //public TextMesh playerName; will add this in the future
         public Text playerLevel;
         public AudioSource audioSource;
 
         // Use this for initialization
-        void Start()
+        void Awake()
         {
             AudioManager.instance.enableAudioSource(audioSource);
-            UIController.displayText(playerLevel, player.exp.ToString());
+            UIController.displayText(playerLevel, "XP: " + GameMaster.instance.player.exp.ToString());
         }
 
         public void Back()
