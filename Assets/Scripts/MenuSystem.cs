@@ -23,7 +23,7 @@ namespace Assets.Scripts
             GameMaster.instance.player.exp = 0;
             //GameMaster.instance.player.costumes[0] = true;
             //GameMaster.instance.player.costumes[1] = false;
-            //GameMaster.instance.player.outfit = defaultOutfit;
+            GameMaster.instance.player.outfitIndex = 0;
         }
         public void Continue()
         {
@@ -35,7 +35,7 @@ namespace Assets.Scripts
             GameMaster.instance.player.money = data.money;
             GameMaster.instance.player.exp = data.exp;
             //GameMaster.instance.player.costumes = data.costumes;
-            //GameMaster.instance.player.outfit = data.outfit;
+            GameMaster.instance.player.outfitIndex = data.outfitIndex;
         }
     }
 }
