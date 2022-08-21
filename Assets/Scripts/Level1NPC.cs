@@ -20,4 +20,10 @@ public class Level1NPC : Unit
         //reloaded = (choices[index] == "Reload");
         return choices[index];
     }
+    public void defaultProperties()
+    {
+        unitName = "Enemy";
+        maxHP = 10;
+        currentHP = 2;
+    }
 }

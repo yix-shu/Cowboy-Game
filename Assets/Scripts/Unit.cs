@@ -20,5 +20,10 @@ public class Unit : MonoBehaviour
     {
         reloaded = true;
     }
-    
+    public void defaultProperties()
+    {
+        unitName = "Player";
+        maxHP = 10;
+        currentHP = 2;
+    }
 }

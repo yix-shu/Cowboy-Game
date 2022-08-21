@@ -10,12 +10,15 @@ namespace Assets.Scripts
         //public TextMesh playerName; will add this in the future
         public Text playerLevel;
         public AudioSource audioSource;
+        public Transform spawn;
+        GameObject playerPrefab = OutfitManager.instance.playerOutfit;
 
         // Use this for initialization
         void Awake()
         {
             AudioManager.instance.enableAudioSource(audioSource);
             UIController.displayText(playerLevel, "XP: " + GameMaster.instance.player.exp.ToString());
+            GameObject playerGO = Instantiate(playerPrefab, spawn);
         }
 
         public void Back()

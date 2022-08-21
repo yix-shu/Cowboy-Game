@@ -17,13 +17,6 @@ namespace Assets.Scripts
         {
             AudioManager.instance.disableAudioSource(source);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
-
-            //setting player data
-            GameMaster.instance.player.money = 0;
-            GameMaster.instance.player.exp = 0;
-            //GameMaster.instance.player.costumes[0] = true;
-            //GameMaster.instance.player.costumes[1] = false;
-            GameMaster.instance.player.outfitIndex = 0;
         }
         public void Continue()
         {

@@ -17,12 +17,14 @@ namespace Assets.Scripts
         public BattleState state;
         public Text dialogueText;
 
-        public GameObject playerPrefab;
-        public GameObject enemyPrefab;
+        GameObject playerPrefab;
+        GameObject enemyPrefab;
+
 
         public Transform playerBattleLoc;
         public Transform enemyBattleLoc;
 
+        
         Unit playerUnit;
         Level1NPC enemyUnit;
 
@@ -36,7 +38,11 @@ namespace Assets.Scripts
         // Start is called before the first frame update
         void Start()
         {
+            playerPrefab = OutfitManager.instance.playerOutfit;
+            enemyPrefab = OutfitManager.instance.outfits[Random.Range(0, 5)];
+
             AudioManager.instance.enableAudioSource(source);
+
             state = BattleState.START;
             StartCoroutine(SetupBattle());
         }
@@ -44,10 +50,14 @@ namespace Assets.Scripts
         IEnumerator SetupBattle()
         {
             GameObject playerGO = Instantiate(playerPrefab, playerBattleLoc);
+            playerGO.AddComponent<Unit>();
             playerUnit = playerGO.GetComponent<Unit>();
+            playerUnit.defaultProperties();
 
             GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleLoc);
+            enemyGO.AddComponent<Level1NPC>();
             enemyUnit = enemyGO.GetComponent<Level1NPC>();
+            enemyUnit.defaultProperties();
 
             dialogueText.text = enemyUnit.unitName + " has challenged you";
 
