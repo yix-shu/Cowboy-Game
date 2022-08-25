@@ -60,6 +60,7 @@ namespace Assets.Scripts
 
             enemyGO = Instantiate(enemyPrefab, enemyBattleLoc);
             enemyGO.AddComponent<Level1NPC>();
+            enemyGO.transform.localScale = new Vector3(-1, 1, 1);
             enemyUnit = enemyGO.GetComponent<Level1NPC>();
             enemyUnit.defaultProperties();
 
@@ -112,6 +113,7 @@ namespace Assets.Scripts
                     {
                         //New turn 
                         state = BattleState.TURN;
+                        AnimationController.trigger(enemyGO, "gotShot");
                         SimultaneousTurn();
                     }
                 }
@@ -122,6 +124,9 @@ namespace Assets.Scripts
                     bool playerIsDead = playerUnit.TakeDamage(1);
                     bool enemyIsDead = enemyUnit.TakeDamage(1);
                     updateHPHUD();
+
+                    AnimationController.trigger(enemyGO, "gotShot");
+                    AnimationController.trigger(playerGO, "gotShot");
 
                     //enemyHUD.updateHP(enemyUnit.currentHP);
 
@@ -193,6 +198,7 @@ namespace Assets.Scripts
                     dialogueText.text = playerUnit.unitName + " reloaded while " + enemyUnit.unitName + " shot them!";
                     enemyUnit.reloaded = false;
                     bool playerIsDead = playerUnit.TakeDamage(1);
+                    AnimationController.trigger(playerGO, "gotShot");
                     updateHPHUD();
                     yield return new WaitForSeconds(3f);
 
@@ -200,6 +206,7 @@ namespace Assets.Scripts
                     if (playerIsDead)
                     {
                         //End battle
+                        AnimationController.trigger(playerGO, "Dead");
                         state = BattleState.LOST;
                         EndBattle();
                     }
