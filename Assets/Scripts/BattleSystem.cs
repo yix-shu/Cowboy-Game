@@ -24,7 +24,11 @@ namespace Assets.Scripts
         public Transform playerBattleLoc;
         public Transform enemyBattleLoc;
 
-        
+        GameObject playerGO;
+        GameObject enemyGO;
+
+
+
         Unit playerUnit;
         Level1NPC enemyUnit;
 
@@ -49,12 +53,12 @@ namespace Assets.Scripts
 
         IEnumerator SetupBattle()
         {
-            GameObject playerGO = Instantiate(playerPrefab, playerBattleLoc);
+            playerGO = Instantiate(playerPrefab, playerBattleLoc);
             playerGO.AddComponent<Unit>();
             playerUnit = playerGO.GetComponent<Unit>();
             playerUnit.defaultProperties();
 
-            GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleLoc);
+            enemyGO = Instantiate(enemyPrefab, enemyBattleLoc);
             enemyGO.AddComponent<Level1NPC>();
             enemyUnit = enemyGO.GetComponent<Level1NPC>();
             enemyUnit.defaultProperties();
@@ -82,6 +86,8 @@ namespace Assets.Scripts
             if (playerUnit.reloaded)
             {
                 playerUnit.reloaded = false;
+                AnimationController.trigger(playerGO, "Shoot");
+                AnimationController.trigger(enemyGO, choice);
                 if (choice == "Reload")
                 {
                     dialogueText.text = playerUnit.unitName + " shot " + enemyUnit.unitName + " while they were reloading!";
@@ -99,6 +105,7 @@ namespace Assets.Scripts
                     {
                         //End battle
                         state = BattleState.WON;
+                        AnimationController.trigger(enemyGO, "Dead");
                         EndBattle();
                     }
                     else
@@ -123,6 +130,8 @@ namespace Assets.Scripts
                     //Check if the enemy has died
                     if (enemyIsDead && playerIsDead)
                     {
+                        AnimationController.trigger(enemyGO, "Dead");
+                        AnimationController.trigger(playerGO, "Dead");
                         state = BattleState.TIE;
                         EndBattle();
                     }
@@ -130,12 +139,14 @@ namespace Assets.Scripts
                     {
                         //End battle
                         state = BattleState.WON;
+                        AnimationController.trigger(enemyGO, "Dead");
                         EndBattle();
                     }
                     else if (playerIsDead)
                     {
                         //End battle
                         state = BattleState.LOST;
+                        AnimationController.trigger(playerGO, "Dead");
                         EndBattle();
                     }
                     else
@@ -169,6 +180,8 @@ namespace Assets.Scripts
             }
             else
             {
+                AnimationController.trigger(playerGO, "Reload");
+                AnimationController.trigger(enemyGO, choice);
                 if (choice == "Reload")
                 {
                     dialogueText.text = "Everyone reloaded.";
@@ -183,7 +196,7 @@ namespace Assets.Scripts
                     updateHPHUD();
                     yield return new WaitForSeconds(3f);
 
-                    //Check if the enemy has died
+                    //Check if the player has died
                     if (playerIsDead)
                     {
                         //End battle
@@ -213,10 +226,12 @@ namespace Assets.Scripts
         }
         IEnumerator PlayerHold()
         {
+            AnimationController.trigger(playerGO, "Hold");
+            AnimationController.trigger(enemyGO, choice);
             if (choice == "Reload")
             {
                 dialogueText.text = playerUnit.unitName + " held while " + enemyUnit.unitName + " reloaded.";
-                enemyUnit.reloaded = true;
+                enemyUnit.reloaded = true;   
                 enemyHUD.updateBullets();
             }
             else if (choice == "Shoot")
