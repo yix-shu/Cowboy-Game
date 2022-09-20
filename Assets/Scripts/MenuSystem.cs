@@ -1,6 +1,9 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Assets.Scripts
 {
@@ -8,6 +11,7 @@ namespace Assets.Scripts
     {
         public PlayerData player;
         public AudioSource source;
+        public Text errorText;
 
         void Start()
         {
@@ -20,9 +24,18 @@ namespace Assets.Scripts
         }
         public void Continue()
         {
+            PlayerData data = SaveSystem.LoadPlayer();
+            if (data == null)
+            {
+                GameMaster.instance.player.money = 0;
+                GameMaster.instance.player.exp = 0;
+                //GameMaster.instance.player.costumes = data.costumes;
+                GameMaster.instance.player.outfitIndex = 0;
+                errorText.gameObject.SetActive(true);
+                return;
+            }
             AudioManager.instance.disableAudioSource(source);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            PlayerData data = SaveSystem.LoadPlayer();
 
             //loading player data
             GameMaster.instance.player.money = data.money;
