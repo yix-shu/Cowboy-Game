@@ -55,16 +55,19 @@ namespace Assets.Scripts
             _websocket.OnError += (e) =>
             {
                 Debug.Log("Error! " + e);
+                //indicate in dialogue text that there was an error
+                mpBattleSystem.EndBattle();
             };
 
             _websocket.OnClose += (e) =>
             {
                 Debug.Log("Connection closed!");
 
-                // only do this if someone quit the game session, and not for a game ending event
-                if (!intentionalClose)
+                if (!intentionalClose) //if player closes a game session
                 {
                     Debug.Log("Disconnected.");
+                    //indicate in dialogue text that there was an error
+                    mpBattleSystem.EndBattle();
                 }
             };
 
@@ -78,7 +81,7 @@ namespace Assets.Scripts
             };
         }
 
-        // Connects to the websocket
+        //Connects to the websocket to find match for 2 players
         async public void FindMatch()
         {
             // waiting for messages
@@ -90,7 +93,6 @@ namespace Assets.Scripts
             //Debug.Log(message);
 
             EventMessage gameMessage = JsonUtility.FromJson<EventMessage>(message);
-            // Debug.Log(JsonUtility.ToJson(gameMessage, true));
             Debug.Log(gameMessage.uuid);
 
             if (gameMessage.opcode == PlayingOp)
@@ -115,19 +117,19 @@ namespace Assets.Scripts
                 mpBattleSystem.updateEnemyAction(BattleAction.HOLD);
             }
 
-            else if (gameMessage.opcode == YouWonOp && gameMessage.uuid != current_uuid)
+            else if (gameMessage.opcode == YouWonOp)
             {
                 Debug.Log("You won!");
                 //change game text to indicate client won
                 QuitGame();
             }
-            else if (gameMessage.opcode == YouDiedOp && gameMessage.uuid != current_uuid)
+            else if (gameMessage.opcode == YouDiedOp)
             {
                 Debug.Log("You lost!");
                 //change game text to indicate client lost
                 QuitGame();
             }
-            else if (gameMessage.opcode == TieOp && gameMessage.uuid != current_uuid)
+            else if (gameMessage.opcode == TieOp)
             {
                 Debug.Log("You tied!");
                 //change game text to indicate client lost
@@ -139,8 +141,7 @@ namespace Assets.Scripts
         {
             if (_websocket.State == WebSocketState.Open)
             {
-                // Sending plain text
-                await _websocket.SendText(message);
+                await _websocket.SendText(message); //sends message to websocket for OnMessage to process
             }
         }
 

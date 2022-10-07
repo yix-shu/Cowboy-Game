@@ -44,7 +44,6 @@ public class BattleHUD : MonoBehaviour
 
     public void updateBullets(Unit unit)
     {
-        unit.ammoLeft -= 1;
         for (int i = 0; i < bullets.Length; i++)
         {
             if (i <= unit.ammoLeft)

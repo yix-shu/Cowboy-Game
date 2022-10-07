@@ -18,12 +18,12 @@ namespace Assets.Scripts
      */
     public class MultiplayerBattleSystem : MonoBehaviour
     {
-        public MultiplayerBattleState state;
+        public MultiplayerBattleState state = MultiplayerBattleState.START;
 
         public UnityEvent onEnemyInput;
 
         public bool started = false;
-        public bool websocketReady = true;
+        public bool websocketReady = false;
 
         public Text dialogueText;
 
@@ -37,13 +37,13 @@ namespace Assets.Scripts
         GameObject enemyGO;
 
         Unit playerUnit;
-        Level1NPC enemyUnit;
+        Unit enemyUnit;
 
         public BattleHUD playerHUD;
         public BattleHUD enemyHUD;
 
-        private BattleAction yourAction;
-        public BattleAction enemyAction;
+        private BattleAction yourAction = BattleAction.NONE;
+        public BattleAction enemyAction = BattleAction.NONE;
         private bool reloaded = false;
 
         public AudioSource source;
@@ -55,7 +55,7 @@ namespace Assets.Scripts
             enemyPrefab = OutfitManager.instance.outfits[Random.Range(0, 5)];
 
             AudioManager.instance.enableAudioSource(source);
-
+            dialogueText.text = "Waiting for player to join...";
 
 
         }
@@ -79,9 +79,9 @@ namespace Assets.Scripts
             playerUnit.defaultProperties();
 
             enemyGO = Instantiate(enemyPrefab, enemyBattleLoc);
-            enemyGO.AddComponent<Level1NPC>();
+            enemyGO.AddComponent<Unit>();
             enemyGO.transform.localScale = new Vector3(-1, 1, 1);
-            enemyUnit = enemyGO.GetComponent<Level1NPC>();
+            enemyUnit = enemyGO.GetComponent<Unit>();
             enemyUnit.defaultProperties();
 
             dialogueText.text = enemyUnit.unitName + " has challenged you";
@@ -104,6 +104,7 @@ namespace Assets.Scripts
         //----------HANDLES PLAYER ACTIONS
         IEnumerator CheckAction()
         {
+            Debug.Log("looping");
             state = MultiplayerBattleState.WAIT;
             //check player1 and player2's actions from server
             //if player1 shot and player2 reload
@@ -112,59 +113,114 @@ namespace Assets.Scripts
             if (enemyAction == BattleAction.NONE)
             {
                 Debug.Log("Wait for other player to pick");
+                dialogueText.text = "Waiting for other player to pick...";
+                yield return new WaitForFixedUpdate();
+                StartCoroutine(CheckAction());
             }
             else
             {
+                bool playerDead = false;
+                bool enemyDead = false;
                 Debug.Log("Everyone has chosen.");
                 if (enemyAction == BattleAction.SHOOT)
                 {
+                    enemyUnit.reloaded = false;
+                    dialogueText.text = "Enemy shot " + playerUnit.unitName;
                     if (yourAction == BattleAction.RELOAD)
                     {
+                        //reloaded
+                        playerUnit.Reload();
                         //lose one health
+                        playerDead = playerUnit.TakeDamage(1);
+                        dialogueText.text = dialogueText.text + " while you were reloading!";
                     }
                     else if (yourAction == BattleAction.SHOOT)
                     {
+                        //player not reloaded
+                        playerUnit.reloaded = false;
                         //both lose one health 
+                        playerDead = playerUnit.TakeDamage(1);
+                        enemyDead = enemyUnit.TakeDamage(1);
+                        dialogueText.text = dialogueText.text + " while you also shot enemy!";
                     }
                     else
                     {
                         //you blocked enemy's shot
+                        dialogueText.text = dialogueText.text + " but you blocked it!";
                     }
                 }
                 else if (enemyAction == BattleAction.RELOAD)
                 {
+                    dialogueText.text = "Enemy reloaded";
                     //update enemy's reload
+                    enemyUnit.Reload();
                     if (yourAction == BattleAction.RELOAD)
                     {
                         //both reloaded
+                        playerUnit.Reload();
                         //update your reload
+                        dialogueText.text = dialogueText.text + " while you also reloaded.";
                     }
                     else if (yourAction == BattleAction.SHOOT)
                     {
                         //update enemy's health 
-                        //
+                        enemyUnit.TakeDamage(1);
+                        playerUnit.reloaded = false;
+                        dialogueText.text = dialogueText.text + " while you shot them!";
+
                     }
                     else
                     {
                         //enemy reloaded while you held/passed
+                        dialogueText.text = dialogueText.text + " while you passed.";
                     }
                 }
+                else
+                {
+                    dialogueText.text = "Enemy held/passed";
+                    if (yourAction == BattleAction.RELOAD)
+                    {
+                        playerUnit.Reload();
+                        //update your reload
+                        dialogueText.text = dialogueText.text + " while you reloaded.";
+                    }
+                    else if (yourAction == BattleAction.SHOOT)
+                    {
+                        playerUnit.reloaded = false;
+                        dialogueText.text = dialogueText.text + " and blocked your shot!";
+                    }
+                    else
+                    {
+                        //everyone held/passed
+                        dialogueText.text = dialogueText.text + " while you also held/passed.";
+                    }
+                }
+                playerHUD.updateBullets(playerUnit);
+                enemyHUD.updateBullets(enemyUnit);
 
                 //check your health or (bullets and not reloaded)
-                if (playerUnit.currentHP == 0 || (playerUnit.ammoLeft == 0 && !playerUnit.reloaded))
+                if (playerDead || (playerUnit.ammoLeft == 0 && !playerUnit.reloaded))
                 {
-                    EventMessage eventMessage = new EventMessage("OnMessage", WebSocketService.YouDiedOp);
+                    EventMessage eventMessage = new EventMessage("OnMessage", WebSocketService.YouWonOp);
                     //display that you lost 
                     WebSocketService.instance.SendWebSocketMessage(JsonUtility.ToJson(eventMessage));
                     state = MultiplayerBattleState.LOST;
                     EndBattle();
                 }
-                else if (enemyUnit.currentHP == 0 || (enemyUnit.ammoLeft == 0 && !enemyUnit.reloaded))
+                else if (enemyDead || (enemyUnit.ammoLeft == 0 && !enemyUnit.reloaded))
                 {
-                    EventMessage eventMessage = new EventMessage("OnMessage", WebSocketService.YouWonOp);
+                    EventMessage eventMessage = new EventMessage("OnMessage", WebSocketService.YouDiedOp);
                     //display that you won
                     WebSocketService.instance.SendWebSocketMessage(JsonUtility.ToJson(eventMessage));
                     state = MultiplayerBattleState.WON;
+                    EndBattle();
+                }
+                else if ((enemyDead || (enemyUnit.ammoLeft == 0 && !enemyUnit.reloaded)) && (playerDead || (playerUnit.ammoLeft == 0 && !playerUnit.reloaded))) //if it is a tie
+                {
+                    EventMessage eventMessage = new EventMessage("OnMessage", WebSocketService.TieOp);
+                    //display that you won
+                    WebSocketService.instance.SendWebSocketMessage(JsonUtility.ToJson(eventMessage));
+                    state = MultiplayerBattleState.TIE;
                     EndBattle();
                 }
                 //check enemy's health or (bullets and not reloaded)
@@ -185,7 +241,7 @@ namespace Assets.Scripts
         }
 
         //----------HANDLES STATES
-        void EndBattle()
+        public void EndBattle()
         {
             AudioManager.instance.disableAudioSource(source);
             if (state == MultiplayerBattleState.WON)
@@ -198,7 +254,7 @@ namespace Assets.Scripts
                 dialogueText.text = "You have lost the duel. You have lost 10 exp.";
                 GameMaster.instance.player.exp -= 10;
             }
-            else if (state == MultiplayerBattleState.TIE)
+            else
             {
                 dialogueText.text = "The duel was inconclusive. Your exp did not change.";
             }
@@ -223,6 +279,7 @@ namespace Assets.Scripts
                 //make it an automatic Hold
                 OnHoldButton();
             }
+            yourAction = BattleAction.SHOOT;
             EventMessage shootMessage = new EventMessage("OnMessage", WebSocketService.ShootOp);
             WebSocketService.instance.SendWebSocketMessage(JsonUtility.ToJson(shootMessage));
             StartCoroutine(CheckAction());
@@ -233,6 +290,7 @@ namespace Assets.Scripts
             {
                 return;
             }
+            yourAction = BattleAction.RELOAD;
             EventMessage reloadMessage = new EventMessage("OnMessage", WebSocketService.ReloadOp);
             WebSocketService.instance.SendWebSocketMessage(JsonUtility.ToJson(reloadMessage));
             StartCoroutine(CheckAction());
@@ -243,6 +301,7 @@ namespace Assets.Scripts
             {
                 return;
             }
+            yourAction = BattleAction.HOLD;
             EventMessage holdMessage = new EventMessage("OnMessage", WebSocketService.HoldOp);
             WebSocketService.instance.SendWebSocketMessage(JsonUtility.ToJson(holdMessage));
             StartCoroutine(CheckAction());
@@ -252,6 +311,7 @@ namespace Assets.Scripts
         public void clearEnemyAction()
         {
             enemyAction = BattleAction.NONE;
+            yourAction = BattleAction.NONE;
         }
 
         public void updateEnemyAction(BattleAction action)

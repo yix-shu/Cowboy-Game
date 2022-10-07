@@ -21,6 +21,7 @@ public class Unit : MonoBehaviour
     public void Reload()
     {
         reloaded = true;
+        ammoLeft -= 1;
     }
     public void defaultProperties()
     {
