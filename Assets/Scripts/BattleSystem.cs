@@ -33,7 +33,7 @@ namespace Assets.Scripts
         Level1NPC enemyUnit;
 
         public BattleHUD playerHUD;
-        public BattleHUD enemyHUD;
+        publi c BattleHUD enemyHUD;
 
         private string choice;
 

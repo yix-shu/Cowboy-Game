@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 public class BattleHUD : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class BattleHUD : MonoBehaviour
         for (int i = 0; i < bullets.Length; i++)
         {
             bullets[i].enabled = true;
+            bullets[i].sprite = fullBullet;
         }
     }
     public void updateBullets()
@@ -29,7 +31,7 @@ public class BattleHUD : MonoBehaviour
         ammoLeft -= 1;
         for (int i = 0; i < bullets.Length; i++)
         {
-            if (i < ammoLeft)
+            if (i <= ammoLeft)
             {
                 bullets[i].sprite = fullBullet;
             }
@@ -39,6 +41,23 @@ public class BattleHUD : MonoBehaviour
             }
         }
     }
+
+    public void updateBullets(Unit unit)
+    {
+        unit.ammoLeft -= 1;
+        for (int i = 0; i < bullets.Length; i++)
+        {
+            if (i <= unit.ammoLeft)
+            {
+                bullets[i].sprite = fullBullet;
+            }
+            else
+            {
+                bullets[i].sprite = emptyBullet;
+            }
+        }
+    }
+
     public void SetHUD(Unit unit)
     {
         nameText.text = unit.unitName;

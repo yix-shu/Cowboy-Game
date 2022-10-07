@@ -9,6 +9,8 @@ public class Unit : MonoBehaviour
     public int maxHP;
     public int currentHP;
     public bool reloaded = false;
+
+    public int ammoLeft = 10;
     //comment
     public bool TakeDamage(int dmg)
     {
@@ -25,5 +27,6 @@ public class Unit : MonoBehaviour
         unitName = "Player";
         maxHP = 10;
         currentHP = 2;
+        ammoLeft = 10;
     }
 }
